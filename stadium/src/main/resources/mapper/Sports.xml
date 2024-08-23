@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.situ.stadium.dao.SportsDao">
+<!--    com.situ.stadium.mobile.model.search.SportsMobileSearchBean-->
+    <resultMap id="sportsMap" type="Sports">
+        <id column="id" property="id"/>
+        <result column="sp_name" property="spName"/>
+        <result column="price" property="price"/>
+        <result column="description" property="description"/>
+
+        <collection column="id" property="areaList" select="com.situ.stadium.mobile.dao.AreaMobileDao.findBySpId"/>
+        <collection column="id" property="coachList" select="com.situ.stadium.mobile.dao.CoachMobileDao.findBySpId"/>
+    </resultMap>
+
+    <sql id="sports">
+        select id,
+               sp_name,
+               price,
+               description
+        from sports
+    </sql>
+
+
+    <select id="findAll" resultMap="sportsMap">
+        <include refid="sports"/>
+    </select>
+
+    <select id="getList" resultType="sports">
+        <include refid="sports"/>
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="spName != null and spName != ''">
+                and sp_name = #{spName}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" resultType="Sports">
+        <include refid="sports"/>
+        where id = #{id}
+    </select>
+
+
+    <insert id="insert">
+        insert into sports (sp_name, price, description)
+        values (#{spName},
+                #{price},
+                #{description})
+    </insert>
+
+    <update id="update">
+        update sports
+        set sp_name     = #{spName},
+            price       = #{price},
+            description = #{description}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByIds">
+        delete from sports
+        where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

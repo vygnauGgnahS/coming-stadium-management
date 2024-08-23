@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.situ.stadium.dao.UserDao">
+
+    <sql id="user">
+        select id,
+               name,
+               nickname,
+               username,
+               password,
+               sex,
+               birthday,
+               phone,
+               avatar,
+               wechat,
+               qq,
+               description
+        from user
+    </sql>
+
+
+    <select id="getList" resultType="User">
+        <include refid="user" />
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                <bind value="'%' + name + '%'" name="n"/>
+                and `name` like #{n}
+            </if>
+            <if test="nickname != null and nickname != ''">
+                <bind value="'%' + nickname + '%'" name="nkn"/>
+                and nickname like #{nkn}
+            </if>
+            <if test="sex != null and sex != ''">
+                and sex = #{sex}
+            </if>
+            <if test="phone != null and phone != ''">
+                <bind value="'%' + phone + '%'" name="ph"/>
+                and phone like #{ph}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" resultType="User">
+        <include refid="user" />
+        where id = #{id}
+    </select>
+
+    <select id="findByUsername" resultType="User">
+        <include refid="user"/>
+        where username = #{username}
+    </select>
+
+
+    <insert id="insert">
+        insert into user (name, nickname, username, password, sex, birthday, phone, avatar, wechat, qq, description)
+        values (#{name},
+                #{nickname},
+                #{username},
+                #{password},
+                #{sex},
+                #{birthday},
+                #{phone},
+                #{avatar},
+                #{wechat},
+                #{qq},
+                #{description})
+    </insert>
+
+    <update id="update">
+        update user
+        set name        = #{name},
+            nickname    = #{nickname},
+            username    = #{username},
+            password    = #{password},
+            sex         = #{sex},
+            birthday    = #{birthday},
+            phone       = #{phone},
+            avatar      = #{avatar},
+            wechat      = #{wechat},
+            qq          = #{qq},
+            description = #{description}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByIds">
+        delete from user
+        where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

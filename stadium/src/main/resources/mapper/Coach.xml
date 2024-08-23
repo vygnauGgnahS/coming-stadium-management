@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.situ.stadium.dao.CoachDao">
+
+    <resultMap id="coachMap" type="Coach">
+        <id column="id" property="id"/>
+        <result column="co_name" property="coName"/>
+        <result column="sp_id" property="spId"/>
+        <result column="sex" property="sex"/>
+        <result column="birthday" property="birthday"/>
+        <result column="phone" property="phone"/>
+        <result column="price" property="price"/>
+        <result column="description" property="description"/>
+
+        <!--一对一关联查询-->
+        <association column="sp_id" property="sports" select="com.situ.stadium.dao.SportsDao.findById"/>
+    </resultMap>
+
+    <sql id="coach">
+        select id,
+               co_name,
+               sp_id,
+               photo,
+               sex,
+               birthday,
+               phone,
+               price,
+               description
+        from coach
+    </sql>
+
+
+    <select id="getList" resultMap="coachMap">
+        <include refid="coach" />
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="coName != null and coName != ''">
+                <bind value="'%' + coName + '%'" name="cn"/>
+                and co_name like #{cn}
+            </if>
+            <if test="sex != null and sex != ''">
+                and sex = #{sex}
+            </if>
+            <if test="spId != null">
+                and sp_id = #{spId}
+            </if>
+            <if test="phone != null and phone != ''">
+                <bind value="'%' + phone + '%'" name="ph"/>
+                and phone like #{ph}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" resultMap="coachMap">
+        <include refid="coach" />
+        where id = #{id}
+    </select>
+
+    <insert id="insert">
+        insert into coach (co_name, sp_id, photo, sex, birthday, phone, price, description)
+        values (#{coName},
+                #{spId},
+                #{photo},
+                #{sex},
+                #{birthday},
+                #{phone},
+                #{price},
+                #{description})
+    </insert>
+
+    <update id="update">
+        update coach
+        set co_name     = #{coName},
+            sp_id       = #{spId},
+            photo       = #{photo},
+            sex         = #{sex},
+            birthday    = #{birthday},
+            phone       = #{phone},
+            price       = #{price},
+            description = #{description}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByIds">
+        delete from coach
+        where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--可选教练-->
+    <resultMap id="usableCoach" type="com.situ.stadium.mobile.model.dto.UsableCoach">
+        <id column="co_id" property="coId"/>
+        <result column="co_name" property="coName"/>
+    </resultMap>
+
+    <select id="getUsableCoach" resultMap="usableCoach">
+        select distinct t1.id as co_id, t1.co_name as co_name
+        from coach t1
+                 left join sports t2 on t1.sp_id = t2.id
+                 left join advance_order t3 on t1.id = t3.co_id
+        where t2.id = #{spId}
+          and ((start_time is null or end_time is null)
+            or (end_time &lt;= #{timeFrom} or start_time &gt;= #{timeTo})
+            or t3.status != '0')
+    </select>
+
+</mapper>
