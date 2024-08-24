@@ -60,6 +60,11 @@
         where id = #{id}
     </select>
 
+    <select id="findBySpId" resultMap="coachMap">
+        <include refid="coach"/>
+        where sp_id = #{spId}
+    </select>
+
     <insert id="insert">
         insert into coach (co_name, sp_id, photo, sex, birthday, phone, price, description)
         values (#{coName},

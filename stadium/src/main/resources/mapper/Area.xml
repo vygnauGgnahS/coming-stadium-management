@@ -50,6 +50,11 @@
         where id = #{id}
     </select>
 
+    <select id="findBySpId" resultMap="areaMap">
+        <include refid="area"/>
+        where sp_id = #{spId}
+    </select>
+
     <insert id="insert">
         insert into sports_area (area_name, sp_id, status, description)
         values (#{areaName},

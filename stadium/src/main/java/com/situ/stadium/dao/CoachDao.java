@@ -14,6 +14,8 @@ public interface CoachDao {
 
     Coach findById(Integer id);
 
+    Coach findBySpId(Integer spId);
+
     int insert(Coach coach);
 
     int update(Coach coach);

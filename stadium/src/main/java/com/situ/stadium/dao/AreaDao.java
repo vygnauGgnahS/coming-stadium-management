@@ -1,7 +1,6 @@
 package com.situ.stadium.dao;
 
 import com.situ.stadium.mobile.model.dto.UsableArea;
-import com.situ.stadium.mobile.model.search.OrderMobileSearchBean;
 import com.situ.stadium.model.Area;
 import com.situ.stadium.model.search.AreaSearchBean;
 import com.situ.stadium.model.search.OrderSearchBean;
@@ -15,6 +14,8 @@ public interface AreaDao {
     List<Area> getList(AreaSearchBean asb);
 
     Area findById(Integer id);
+
+    Area findBySpId(Integer spId);
 
     int insert(Area area);
 

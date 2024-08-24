@@ -10,8 +10,8 @@
         <result column="price" property="price"/>
         <result column="description" property="description"/>
 
-        <collection column="id" property="areaList" select="com.situ.stadium.mobile.dao.AreaMobileDao.findBySpId"/>
-        <collection column="id" property="coachList" select="com.situ.stadium.mobile.dao.CoachMobileDao.findBySpId"/>
+        <collection column="id" property="areaList" select="com.situ.stadium.dao.AreaDao.findBySpId"/>
+        <collection column="id" property="coachList" select="com.situ.stadium.dao.CoachDao.findBySpId"/>
     </resultMap>
 
     <sql id="sports">
