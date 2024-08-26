@@ -4,9 +4,9 @@
             你好，{{ user.name }}
         </div>
         <div class="main">
-            <van-button disabled @click="edit" round size="small" type="primary">修改信息</van-button>
-            <van-button disabled @click="change" round size="small" type="success">更改密码</van-button>
-            <van-button @click="logout" size="small" round type="danger">退出登录</van-button>
+            <!-- <van-button disabled @click="edit" round size="small" type="primary">修改信息</van-button> -->
+            <van-button disabled @click="change" round size="normal" type="success">更改密码</van-button>
+            <van-button @click="logout" size="normal" round type="danger">退出登录</van-button>
         </div>
         <div class="userInfo">
 
@@ -17,6 +17,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
+import router from '../../route';
 
 const user = ref({
     name: ''
@@ -39,7 +40,6 @@ const edit = () => {
     user = JSON.parse(user)
     console.log(user);
     
-
 }
 
 const change = () => {
@@ -49,7 +49,7 @@ const change = () => {
 
 const logout = () => {
     sessionStorage.removeItem('userData')
-    location.reload()
+    router.push('/main/index')
 }
 
 
@@ -72,7 +72,7 @@ const logout = () => {
     padding: 20px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 .edit {

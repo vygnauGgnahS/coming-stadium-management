@@ -14,6 +14,11 @@
         </van-pull-refresh>
     </div>
 
+    <van-dialog>
+
+    </van-dialog>
+
+
     <van-dialog v-model:show="dialog" @confirm="submitOrder" @closed="closeDialog" title="预约" show-cancel-button>
         <van-cell-group inset>
             {{ rowSports }}
@@ -82,6 +87,7 @@ const orderInfo = ref({
     description: ''
 })
 
+
 const submitOrder = async () => {
     console.log(orderInfo.value);
 
@@ -104,7 +110,7 @@ const submitOrder = async () => {
     closeDialog()
     area.value = []
     coach.value = []
-    
+
 }
 
 
@@ -124,7 +130,28 @@ async function getSports() {
 //预约弹窗
 const dialog = ref(false)
 
+const toLoignDia = ref(false)
+
+const ifLogin = () => {
+    let data = sessionStorage.getItem('userData');
+    if (data === null) {
+        toLoignDia.value = true
+        showDialog({
+            title: '提示',
+            message: '请登录',
+        }).then(() => {
+            // on close
+        });
+        return false
+    }
+    return true
+}
 function book(sports) {
+    if (ifLogin() === false) {
+        return;
+    }
+
+
     dialog.value = true
     orderInfo.value.userId = JSON.parse(sessionStorage.getItem('userData')).id
     orderInfo.value.spId = sports.id
@@ -247,7 +274,7 @@ async function getAreas() {
             });
         }
         data.map(e => {
-            let a = {name: '', text: 0}
+            let a = { name: '', text: 0 }
             a.text = e.areaName
             a.value = e.areaId
             areaCol.value.push(a)
@@ -273,7 +300,7 @@ async function getCoaches() {
             value: ''
         })
         data.map(e => {
-            let c = {name: '', text: 0}
+            let c = { name: '', text: 0 }
             c.text = e.coName
             c.value = e.coId
             coachCol.value.push(c)

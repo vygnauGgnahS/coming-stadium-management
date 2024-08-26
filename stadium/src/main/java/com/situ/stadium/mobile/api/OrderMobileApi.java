@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v2/orders")
+@RequestMapping(value = "/api/v2/orders", produces = "application/json;charset=utf-8")
 public class OrderMobileApi {
     private OrderService orderService;
 
@@ -54,6 +54,26 @@ public class OrderMobileApi {
         return Map.of("success", true, "res", res);
     }
 
+    @PutMapping
+    public Map<String, Object> editOrder(@RequestBody Order order) {
+        int num = this.orderService.edit(order);
+        if (num > 0) {
+            return Map.of("success", true);
+        } else if (num == 0) {
+            return Map.of("success", false, "msg", "提交失败，请重试");
+        } else if (num == -1) {
+            return Map.of("success", false, "msg", "查找错误");
+        } else if (num == -2) {
+            return Map.of("success", false, "msg", "时间冲突");
+        }
+        return Map.of("success", false, "msg", "未知错误");
+    }
+
+    @PutMapping("/cancel")
+    public Map<String, Object> cancelOrder(@RequestBody Integer orderId) {
+        int rows = this.orderService.cancel(orderId);
+        return Map.of("success", rows > 0);
+    }
 
 
 

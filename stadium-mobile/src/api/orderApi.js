@@ -11,4 +11,13 @@ async function getOrders(userId) {
     return resp
 }
 
-export { getOrders }
+async function edit(order) {
+    let resp = api({
+        url: '/orders',
+        method: 'put',
+        data: order
+    })
+    return resp
+}
+
+export { getOrders, edit }

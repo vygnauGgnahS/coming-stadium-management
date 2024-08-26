@@ -1,14 +1,16 @@
 const mainView = () => import('@/views/Main.vue')
 const indexView = () => import('@/views/pages/Index.vue')
-const infoView = () => import('@/views/pages/Info.vue')
 const orderView = () => import('@/views/pages/Order.vue')
 const homeView = () => import('@/views/pages/Home.vue')
 
 const loginView = () => import('@/views/Login.vue')
-const areaView = () => import('@/views/pages/others/Area.vue')
 
 
 const routes = [
+    {
+        path: '/',
+        redirect: '/main/index'
+    },
     {
         name: 'login',
         path: '/login',
@@ -30,13 +32,6 @@ const routes = [
                     title: '首页'
                 }
             }, {
-                name: 'info',
-                path: '/main/info',
-                component: infoView,
-                meta: {
-                    title: '查看信息'
-                }
-            }, {
                 name: 'orders',
                 path: '/main/orders',
                 component: orderView,
@@ -52,13 +47,6 @@ const routes = [
                 }
             }
         ]
-    }, {
-        name: 'area',
-        path: '/area',
-        component: areaView,
-        meta: {
-            title: '场地查看'
-        }
     }
 ]
 

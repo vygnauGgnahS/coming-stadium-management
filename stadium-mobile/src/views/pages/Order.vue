@@ -6,11 +6,10 @@
         <div class="list">
             <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
                 <van-cell v-for="o in orderList" :key="o.id" :title="o.area.areaName">
-                    <template #default>
+                    <template #default="scoped">
                         <div class="item">
                             <div class="btn">
-                                <div><van-button size="mini" type="warning">取消预约</van-button></div>
-                                <div><van-button size="mini" type="primary">完成订单</van-button></div>
+                                <div><van-button @click="cancel(o)" size="mini" type="warning">取消预约</van-button></div>
                             </div>
 
                             <div>
@@ -48,7 +47,7 @@
 </template>
 
 <script setup>
-import { getOrders as apiGetOrders } from '@/api/orderApi'
+import { getOrders as apiGetOrders, edit as apiEdit } from '@/api/orderApi'
 import { onMounted, ref } from 'vue'
 
 const orderList = ref([])
@@ -92,6 +91,27 @@ const onLoad = () => {
         }
     }, 500);
 };
+
+
+
+//取消订单
+const cancel = async (order) => {
+    if (order.status === '1') {
+        console.log('已完成');
+        return ;
+    }
+
+    order.status = '2'
+    console.log(order);
+    
+    let resp = await apiEdit(order)
+    if (resp.success) {
+        console.log('取消成功');
+        
+    }
+    // let resp = await apiEdit(order)
+}
+
 </script>
 
 <style scoped>
